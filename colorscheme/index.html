@@ -6,11 +6,13 @@
   <title>Color Scheme</title>
 
   <link rel="stylesheet" href="../lib/jquery/colpick/css/colpick.css" type="text/css" />
+  <link rel="stylesheet" href="../lib/jquery/jquery-ui-1.11.4/themes/smoothness/jquery-ui.css" type="text/css" />
 
-  <script type="text/javascript" src="../lib/jquery/jquery-2.1.4.min.js"></script>
   <!--
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js""></script>
   -->
+  <script type="text/javascript" src="../lib/jquery/jquery-2.1.4.min.js"></script>
+  <script type="text/javascript" src="../lib/jquery/jquery-ui-1.11.4/jquery-ui.js"></script>
   <script type="text/javascript" src="../lib/jquery/colpick/js/colpick.js"></script>
 
   <style type="text/css">
@@ -25,6 +27,12 @@
     width: 100%;
     height: 100%;
   }
+  body>table th {
+    border-bottom: solid 1px #000;
+  }
+  body>table th {
+    vertical-align: top;
+  }
   body>table td {
     vertical-align: top;
   }
@@ -35,42 +43,85 @@
     width: 5px;
     background: #aaa;
   }
+  .text-item {
+    width: 100px;
+    min-width: 100px;
+    height: 100px;
+    min-height: 100px;
+    padding: 0.5em;
+    font-size: 14px;
+    //background: yellow;
+  }
+  .rect-item {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+    background: yellow;
+  }
 
   .picker {
-    margin:0;
-    padding:0;
+    margin: 0px;
+    padding:0px;
     border:0;
     width:70px;
     height:20px;
-    border-right:20px solid #fefefe;
     line-height:20px;
   }
-
+  
   .color-pane {
+    width: 95%;
     background: #ccc;
     border: solid 1px #000;
     margin: 4px;
     padding: 4px;
   }
+  .color-pane th {
+    width: 40%;
+  }
+  .color-pane td {
+    padding: 0.2em;
+  }
+  .color-pane span {
+    background: white;
+    margin: 0.25em;
+    display: inline-block;
+  }
+  .color-pane .picker-pane {
+    padding: 0.2em;
+    background: white;
+    box-shadow: 0px 0px 8px rgba(0,0,0,0.4);
+  }
   </style>
-</head>
+
+  </head>
 <body>
 
 <table>
 <tr>
 <td id="menu-wrapper">
 
-<div class="color-pane">
+<table class="color-pane">
+<tr><th>背景</th><td><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="bg-selector">  </input></span></div></td></tr>
 
-<p># <input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="bg-selector"></input></p>
-<p># <input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="col-selector"></input></p>
-<p># <input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="subcol-selector"></input></p>
+<tr><th rowspan="3">文字</th><td><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="col-selector"> </input></span></div></td></tr>
+<tr><td><span><input type="text" value="14" maxlength="3" size="3" class="size-text"></input>px</span></td></tr>
+<tr><td><input type="button" name="追加" value="追加" class="add-text"></input></td></tr>
 
-</div>
+<tr><th>矩形</th><td><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="rect-selector"></input></span></div></td></tr>
+</table>
 
 </td>
 <td id="divider" ></td>
 <td id="main-wrapper">
+
+<div class="text-item editable ui-widget-content" >
+  <p contenteditable="true">Drag me around</p>
+</div>
+
+<div class="rect-item editable ui-widget-content" >
+</div>
+ 
 </td>
 </tr>
 </table>
@@ -81,12 +132,46 @@
     submit:0,
     colorScheme:'dark',
     onChange:function(hsb,hex,rgb,el,bySetColor) {
-      $(el).css('border-color','#'+hex);
+      $(el).parent().parent().css('background','#'+hex);
       // Fill the text box just if the color was set using the picker, and not the colpickSetColor function.
-      if(!bySetColor) $(el).val(hex);
+      if(!bySetColor) {
+        $(el).val(hex);
+      }
+      if( $(el).attr('id') == "bg-selector" ) {
+        $('#main-wrapper').css('background', '#'+hex);
+      }
+      if( $(el).attr('id') == "col-selector" ) {
+        $('.text-item').css('color', '#'+hex);
+      }
+      if( $(el).attr('id') == "rect-selector" ) {
+        $('.rect-item').css('background', '#'+hex);
+      }
     }
   }).keyup(function(){
     $(this).colpickSetColor(this.value);
+  });
+  $('.size-text').change(function(){
+    $('.text-item').css('font-size', $(this).val());
+  });
+  $('.picker-pane').click(function(){
+    $(this).find('.picker').trigger("click");
+  });
+  $(function update_ediable() {
+    $( ".editable" ).resizable({containment: "#main-wrapper"
+    }).draggable({cursor: "move", containment: "parent"}).on('click', function() {
+      $(this).draggable({ disabled: false });
+    }).on('dblclick', function() {
+        $(this).draggable({ disabled: true });
+    });
+  });
+  $('.add-text').click(function(){
+    $('#main-wrapper').append("<div class=\"text-item editable ui-widget-content\" ><p contenteditable=\"true\">Drag me around</p></div>");
+    $( ".editable" ).resizable({containment: "#main-wrapper"
+    }).draggable({cursor: "move", containment: "parent"}).on('click', function() {
+      $(this).draggable({ disabled: false });
+    }).on('dblclick', function() {
+        $(this).draggable({ disabled: true });
+    });
   });
 </script>
 
