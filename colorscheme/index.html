@@ -6,7 +6,7 @@
   <title>Color Scheme</title>
 
   <link rel="stylesheet" href="../lib/jquery/colpick/css/colpick.css" type="text/css" />
-  <link rel="stylesheet" href="../lib/jquery/jquery-ui-1.11.4/themes/smoothness/jquery-ui.css" type="text/css" />
+  <link rel="stylesheet" href="../lib/jquery/jquery-ui-1.11.4/jquery-ui.css" type="text/css" />
 
   <!--
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js""></script>
@@ -46,8 +46,8 @@
   .text-item {
     width: 100px;
     min-width: 100px;
-    height: 100px;
-    min-height: 100px;
+    height: 60px;
+    min-height: 20px;
     padding: 0.5em;
     font-size: 14px;
     //background: yellow;
@@ -115,11 +115,11 @@
 <td id="divider" ></td>
 <td id="main-wrapper">
 
-<div class="text-item editable ui-widget-content" >
+<div class="text-item editable" >
   <p contenteditable="true">Drag me around</p>
 </div>
 
-<div class="rect-item editable ui-widget-content" >
+<div class="rect-item editable" >
 </div>
  
 </td>
@@ -165,7 +165,7 @@
     });
   });
   $('.add-text').click(function(){
-    $('#main-wrapper').append("<div class=\"text-item editable ui-widget-content\" ><p contenteditable=\"true\">Drag me around</p></div>");
+    $('#main-wrapper').append("<div class=\"text-item editable\" ><p contenteditable=\"true\">Drag me around</p></div>");
     $( ".editable" ).resizable({containment: "#main-wrapper"
     }).draggable({cursor: "move", containment: "parent"}).on('click', function() {
       $(this).draggable({ disabled: false });
