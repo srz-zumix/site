@@ -59,6 +59,10 @@
     min-height: 40px;
     background: yellow;
   }
+  
+  #text-item-select {
+    width: 60px;
+  }
 
   .picker {
     margin: 0px;
@@ -104,7 +108,7 @@
 <table class="color-pane">
 <tr><th>背景</th><td><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="bg-selector">  </input></span></div></td></tr>
 
-<tr><th rowspan="3">文字</th><td><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="col-selector"> </input></span></div></td></tr>
+<tr><th rowspan="3">文字<br /><SELECT id="text-item-select" name="text-item-select" ></SELECT></th><td><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="col-selector"> </input></span></div></td></tr>
 <tr><td><span><input type="text" value="14" maxlength="3" size="3" class="size-text"></input>px</span></td></tr>
 <tr><td><input type="button" name="追加" value="追加" class="add-text"></input></td></tr>
 
