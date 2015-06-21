@@ -44,12 +44,12 @@
     background: #aaa;
   }
   .text-item {
-    width: 100px;
+    width: 200px;
     min-width: 100px;
     height: 60px;
     min-height: 20px;
     padding: 0.5em;
-    font-size: 14px;
+    font-size: 20px;
     //background: yellow;
   }
   .rect-item {
@@ -98,6 +98,46 @@
   }
   </style>
 
+  <script>
+  function rgb2hex(rgb) {
+    var ret = eval(rgb.replace(/rgb/,"((").replace(/,/ig,")*256+")).toString(16); 
+    return (("000000" + ret).substring( 6 + ret.length - 6));
+  }
+  function select_text_item(item) {
+    var i = $(".text-item").index($(item));
+    $("#text-item-select").val(i+1);
+    var c = rgb2hex($(item).css('color'));
+    $("#col-selector").val(c);
+    $("#col-selector").colpickSetColor('#' + c);
+    
+    var s = $(item).css('font-size');
+    $("#size-text").val(s);
+
+    var w = $(item).css('font-weight');
+    $("#weight-text").val(w);
+  }
+  function update_ediable() {
+    $( ".editable" ).resizable({containment: "#main-wrapper", autoHide : true
+    }).draggable({cursor: "move", containment: "parent"}).on('click', function() {
+      $(this).draggable({ disabled: false });
+    }).on('dblclick', function() {
+      $(this).draggable({ disabled: true });
+    });
+    $( ".text-item").on('mousedown', function () {
+      select_text_item(this);
+    });
+  }
+  function add_text_item() {
+    $('#main-wrapper').append("<div class=\"text-item editable\" ><p contenteditable=\"true\">Drag me around<br />Edit by double click</p></div>");
+    var index = $(".text-item").size()
+    $("#text-item-select").append($('<option>').html(index).val(index));
+    update_ediable();
+    select_text_item($(".text-item").eq(index-1));
+  }
+  $(function () {
+    add_text_item();
+  });
+  </script>
   </head>
 <body>
 
@@ -106,22 +146,20 @@
 <td id="menu-wrapper">
 
 <table class="color-pane">
-<tr><th>背景</th><td><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="bg-selector">  </input></span></div></td></tr>
+<tr><th>背景</th><td colspan="2"><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="bg-selector">  </input></span></div></td></tr>
 
-<tr><th rowspan="3">文字<br /><SELECT id="text-item-select" name="text-item-select" ></SELECT></th><td><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="col-selector"> </input></span></div></td></tr>
-<tr><td><span><input type="text" value="14" maxlength="3" size="3" class="size-text"></input>px</span></td></tr>
-<tr><td><input type="button" name="追加" value="追加" class="add-text"></input></td></tr>
+<tr><th rowspan="3">文字<br />
+<SELECT id="text-item-select" name="text-item-select" ></SELECT>
+<input type="button" name="追加" value="追加" id="add-text"></input></th><td colspan="2"><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="col-selector"> </input></span></div></td></tr>
+<tr><td>size  </td><td><input type="text" value="14px" maxlength="6" size="6" id="size-text"  ></input></td></tr>
+<tr><td>weight</td><td><input type="text" value="400"  maxlength="3" size="3" id="weight-text"></input></td></tr>
 
-<tr><th>矩形</th><td><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="rect-selector"></input></span></div></td></tr>
+<tr><th>矩形</th><td colspan="2"><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="rect-selector"></input></span></div></td></tr>
 </table>
 
 </td>
 <td id="divider" ></td>
 <td id="main-wrapper">
-
-<div class="text-item editable" >
-  <p contenteditable="true">Drag me around</p>
-</div>
 
 <div class="rect-item editable" >
 </div>
@@ -134,7 +172,7 @@
   $('.picker').colpick({
     layout:'full',
     submit:0,
-    colorScheme:'dark',
+    colorScheme:'light',
     onChange:function(hsb,hex,rgb,el,bySetColor) {
       $(el).parent().parent().css('background','#'+hex);
       // Fill the text box just if the color was set using the picker, and not the colpickSetColor function.
@@ -145,7 +183,8 @@
         $('#main-wrapper').css('background', '#'+hex);
       }
       if( $(el).attr('id') == "col-selector" ) {
-        $('.text-item').css('color', '#'+hex);
+        var index = $("#text-item-select").val();
+        $('.text-item').eq(index-1).css('color', '#'+hex);
       }
       if( $(el).attr('id') == "rect-selector" ) {
         $('.rect-item').css('background', '#'+hex);
@@ -154,28 +193,23 @@
   }).keyup(function(){
     $(this).colpickSetColor(this.value);
   });
-  $('.size-text').change(function(){
-    $('.text-item').css('font-size', $(this).val());
+  $('#size-text').change(function(){
+    var index = $("#text-item-select").val();
+    $('.text-item').eq(index-1).css('font-size', $(this).val());
+  });
+  $('#weight-text').change(function(){
+    var index = $("#text-item-select").val();
+    $('.text-item').eq(index-1).css('font-weight', $(this).val());
   });
   $('.picker-pane').click(function(){
     $(this).find('.picker').trigger("click");
   });
-  $(function update_ediable() {
-    $( ".editable" ).resizable({containment: "#main-wrapper"
-    }).draggable({cursor: "move", containment: "parent"}).on('click', function() {
-      $(this).draggable({ disabled: false });
-    }).on('dblclick', function() {
-        $(this).draggable({ disabled: true });
-    });
+  $('#add-text').click(function(){
+    add_text_item();
   });
-  $('.add-text').click(function(){
-    $('#main-wrapper').append("<div class=\"text-item editable\" ><p contenteditable=\"true\">Drag me around</p></div>");
-    $( ".editable" ).resizable({containment: "#main-wrapper"
-    }).draggable({cursor: "move", containment: "parent"}).on('click', function() {
-      $(this).draggable({ disabled: false });
-    }).on('dblclick', function() {
-        $(this).draggable({ disabled: true });
-    });
+  $('#text-item-select').change(function(){
+    var index = $("#text-item-select").val();
+    select_text_item($(".text-item").eq(index-1));
   });
 </script>
 
