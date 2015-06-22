@@ -28,9 +28,6 @@
     height: 100%;
   }
   body>table th {
-    border-bottom: solid 1px #000;
-  }
-  body>table th {
     vertical-align: top;
   }
   body>table td {
@@ -38,6 +35,12 @@
   }
   #menu-wrapper {
     width: 20em;
+  }
+  #main-wrapper {
+    height: 95%;
+  }
+  #foot-wrapper {
+    border-top: 5px solid #aaa;
   }
   #divider {
     width: 5px;
@@ -73,31 +76,79 @@
     line-height:20px;
   }
   
-  .color-pane {
+  .item-pane {
     width: 95%;
     background: #ccc;
     border: solid 1px #000;
     margin: 4px;
     padding: 4px;
   }
-  .color-pane th {
-    width: 40%;
+  .item-pane th {
+    text-align: left;
   }
-  .color-pane td {
+  .item-pane td {
     padding: 0.2em;
+    vertical-align: middle;
   }
-  .color-pane span {
+  .item-pane span {
     background: white;
     margin: 0.25em;
     display: inline-block;
   }
-  .color-pane .picker-pane {
+  .item-pane .spliter {
+    border-top: 1px solid #000;
+  }
+  .item-pane .picker-pane {
     padding: 0.2em;
     background: white;
     box-shadow: 0px 0px 8px rgba(0,0,0,0.4);
   }
+
+  .toolbox {
+    width: 40px;
+    height: 40px;
+    text-align:center;
+    vertical-align: middle;
+    display: table-cell;
+  }
+  #garbageCan img {
+    vertical-align: middle;
+  }
+  .dragaccept {
+  }
+  .dragover {
+    background: #c2cbff;
+  }
   </style>
 
+  <script>
+  // http://jabnz.blog69.fc2.com/blog-entry-664.html
+  function addFontsData(fonts){
+    for( i=0; i < fonts.length; i++) {
+      var g = $('<optgroup>').css('font-family', fonts[i]).appendTo($("#font-select"));
+      g.append($('<option>').html(fonts[i]).val(fonts[i]));
+    }
+  }
+  $(function() {
+    var flash = 0;
+    for(i=0;i<navigator.mimeTypes.length;i++){
+        if (navigator.mimeTypes[i].suffixes == "swf"){
+            flash = 1;
+        }
+    }
+    if(flash) {
+      var el = document.createElement("embed");
+      el.src = "getFontsList.swf?function=addFontsData";
+      el.width = 1;
+      el.height = 1;
+      el.wmode = "transparent";
+      document.body.appendChild(el);
+    } else {
+      $("#font-select").attr('disabled', true);
+    }
+  });
+  </script>
+  
   <script>
   function rgb2hex(rgb) {
     var ret = eval(rgb.replace(/rgb/,"((").replace(/,/ig,")*256+")).toString(16); 
@@ -116,15 +167,48 @@
     var w = $(item).css('font-weight');
     $("#weight-text").val(w);
   }
+  function select_rect_item(item) {
+    var i = $(".rect-item").index($(item));
+    $("#rect-item-select").val(i+1);
+    var c = rgb2hex($(item).css('color'));
+    $("#rectcol-selector").val(c);
+    $("#rectcol-selector").colpickSetColor('#' + c);
+  }
+
+  function delete_ediable(item) {
+    $(item).remove();
+    if( $(item).hasClass("text-item") ) {
+        $("select#text-item-select").children('option:last-child').remove();
+        select_text_item($(".text-item").eq(0));
+    } else if( $(item).hasClass("text-item") ) {
+        $("select#rect-item-select").children('option:last-child').remove();
+        select_rect_item($(".rect-item").eq(0));
+    }
+  }
   function update_ediable() {
     $( ".editable" ).resizable({containment: "#main-wrapper", autoHide : true
-    }).draggable({cursor: "move", containment: "parent"}).on('click', function() {
+    }).draggable({
+        cursor: "move"
+      , containment: "parent"
+    }).on('click', function() {
       $(this).draggable({ disabled: false });
     }).on('dblclick', function() {
       $(this).draggable({ disabled: true });
     });
     $( ".text-item").on('mousedown', function () {
       select_text_item(this);
+    });
+    $( ".rect-item").on('mousedown', function () {
+      select_rect_item(this);
+    });
+    $("#garbageCan").droppable({
+      activeClass: "dragaccept",
+      hoverClass: "dragover",
+      tolerance: "pointer",
+      drop: function(event, ui) {
+        $('body').css('cursor', 'auto');
+        delete_ediable($(ui.draggable));
+      }
     });
   }
   function add_text_item() {
@@ -134,8 +218,16 @@
     update_ediable();
     select_text_item($(".text-item").eq(index-1));
   }
+  function add_rect_item() {
+    $('#main-wrapper').append("<div class=\"rect-item editable\" style=\"color:yellow;\" ></div>");
+    var index = $(".rect-item").size()
+    $("#rect-item-select").append($('<option>').html(index).val(index));
+    update_ediable();
+    select_rect_item($(".rect-item").eq(index-1));
+  }
   $(function () {
     add_text_item();
+    add_rect_item();
   });
   </script>
   </head>
@@ -143,27 +235,42 @@
 
 <table>
 <tr>
-<td id="menu-wrapper">
+<td rowspan="2" id="menu-wrapper">
 
-<table class="color-pane">
-<tr><th>背景</th><td colspan="2"><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="bg-selector">  </input></span></div></td></tr>
+<table class="item-pane">
 
-<tr><th rowspan="3">文字<br />
-<SELECT id="text-item-select" name="text-item-select" ></SELECT>
-<input type="button" name="追加" value="追加" id="add-text"></input></th><td colspan="2"><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="col-selector"> </input></span></div></td></tr>
+<!-- 背景 -->
+<tr><th>背景</th><td><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="bg-selector">  </input></span></div></td></tr>
+<tr><td colspan="2" class="spliter"></td></tr>
+
+<!-- 文字 -->
+<tr><th>文字</th><td><SELECT id="text-item-select" name="text-item-select" ></SELECT><input type="button" name="追加" value="追加" id="add-text"></input></td></tr>
+<tr><td>color </td><td><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="col-selector"> </input></span></div></th></tr>
 <tr><td>size  </td><td><input type="text" value="14px" maxlength="6" size="6" id="size-text"  ></input></td></tr>
 <tr><td>weight</td><td><input type="text" value="400"  maxlength="3" size="3" id="weight-text"></input></td></tr>
+<tr><td>font  </td><td><SELECT id="font-select" name="font-select" size="4" style="width: 100%"></SELECT></input></td></tr>
+<tr><td colspan="2" class="spliter"></td></tr>
 
-<tr><th>矩形</th><td colspan="2"><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="rect-selector"></input></span></div></td></tr>
+<!-- 矩形 -->
+<tr><th>矩形</th><td><SELECT id="rect-item-select" name="rect-item-select" ></SELECT><input type="button" name="追加" value="追加" id="add-rect"></input></td></tr>
+<tr><td>color </td><td><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="rectcol-selector"></input></span></div></td></tr>
+<tr><td colspan="2" class="spliter"></td></tr>
+
 </table>
 
 </td>
-<td id="divider" ></td>
+<td rowspan="2" id="divider" ></td>
 <td id="main-wrapper">
 
-<div class="rect-item editable" >
+</td>
+
+</tr>
+
+<tr>
+<td id="foot-wrapper">
+<div id="garbageCan" class="toolbox">
+  <img src="../images/Tutorial9/recycle32.png" />
 </div>
- 
 </td>
 </tr>
 </table>
@@ -186,8 +293,9 @@
         var index = $("#text-item-select").val();
         $('.text-item').eq(index-1).css('color', '#'+hex);
       }
-      if( $(el).attr('id') == "rect-selector" ) {
-        $('.rect-item').css('background', '#'+hex);
+      if( $(el).attr('id') == "rectcol-selector" ) {
+        var index = $("#rect-item-select").val();
+        $('.rect-item').eq(index-1).css('background', '#'+hex);
       }
     }
   }).keyup(function(){
@@ -201,11 +309,22 @@
     var index = $("#text-item-select").val();
     $('.text-item').eq(index-1).css('font-weight', $(this).val());
   });
+  $('#font-select').change(function(){
+    var index = $("#text-item-select").val();
+    $('.text-item').eq(index-1).css('font-family', $(this).val());
+  });
   $('.picker-pane').click(function(){
     $(this).find('.picker').trigger("click");
   });
   $('#add-text').click(function(){
     add_text_item();
+  });
+  $('#add-rect').click(function(){
+    add_rect_item();
+  });
+  $('#text-rect-select').change(function(){
+    var index = $("#text-item-rect").val();
+    select_rect_item($(".rect-item").eq(index-1));
   });
   $('#text-item-select').change(function(){
     var index = $("#text-item-select").val();
