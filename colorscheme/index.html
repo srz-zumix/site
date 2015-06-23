@@ -7,6 +7,7 @@
 
   <link rel="stylesheet" href="../lib/jquery/colpick/css/colpick.css" type="text/css" />
   <link rel="stylesheet" href="../lib/jquery/jquery-ui-1.11.4/jquery-ui.css" type="text/css" />
+  <link rel="stylesheet" href="../lib/jquery/simple-color-picker/jquery.simple-color-picker.css" type="text/css" />
 
   <!--
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js""></script>
@@ -14,6 +15,7 @@
   <script type="text/javascript" src="../lib/jquery/jquery-2.1.4.min.js"></script>
   <script type="text/javascript" src="../lib/jquery/jquery-ui-1.11.4/jquery-ui.js"></script>
   <script type="text/javascript" src="../lib/jquery/colpick/js/colpick.js"></script>
+  <script type="text/javascript" src="../lib/jquery/simple-color-picker/jquery.simple-color-picker.js"></script>
 
   <style type="text/css">
   html, body {
@@ -37,6 +39,7 @@
     width: 20em;
   }
   #main-wrapper {
+    background: #fffcf0;
     height: 95%;
   }
   #foot-wrapper {
@@ -46,6 +49,7 @@
     width: 5px;
     background: #aaa;
   }
+  
   .text-item {
     width: 200px;
     min-width: 100px;
@@ -53,7 +57,7 @@
     min-height: 20px;
     padding: 0.5em;
     font-size: 20px;
-    //background: yellow;
+    z-index: 2;
   }
   .rect-item {
     width: 40px;
@@ -61,10 +65,14 @@
     height: 40px;
     min-height: 40px;
     background: yellow;
+    z-index: 1;
   }
   
-  #text-item-select {
+  #text-item-select, #rect-item-select {
     width: 60px;
+  }
+  #font-select optgroup {
+    height: 20px;
   }
 
   .picker {
@@ -77,7 +85,7 @@
   }
   
   .item-pane {
-    width: 95%;
+    width: 97%;
     background: #ccc;
     border: solid 1px #000;
     margin: 4px;
@@ -119,6 +127,9 @@
   .dragover {
     background: #c2cbff;
   }
+  .editing {
+    border: solid 1px #222;
+  }
   </style>
 
   <script>
@@ -150,6 +161,19 @@
   </script>
   
   <script>
+  function blinkBorder(item) {
+    var cnt = 0;
+    $(item).addClass('editing');
+    var timer = setInterval(function () {
+        cnt++
+        $(item).toggleClass('editing');
+        if (cnt == 3) {
+            clearInterval(timer);
+        }
+    }, 400);
+  }
+  </script>
+  <script>
   function rgb2hex(rgb) {
     var ret = eval(rgb.replace(/rgb/,"((").replace(/,/ig,")*256+")).toString(16); 
     return (("000000" + ret).substring( 6 + ret.length - 6));
@@ -165,12 +189,13 @@
     $("#size-text").val(s);
 
     var w = $(item).css('font-weight');
-    $("#weight-text").val(w);
+    $("input#weight-text").val(w);
+    $("select#weight-text").val(w);
   }
   function select_rect_item(item) {
     var i = $(".rect-item").index($(item));
     $("#rect-item-select").val(i+1);
-    var c = rgb2hex($(item).css('color'));
+    var c = rgb2hex($(item).css('background-color'));
     $("#rectcol-selector").val(c);
     $("#rectcol-selector").colpickSetColor('#' + c);
   }
@@ -186,10 +211,24 @@
     }
   }
   function update_ediable() {
-    $( ".editable" ).resizable({containment: "#main-wrapper", autoHide : true
+    $( ".editable" ).resizable({
+        containment: "#main-wrapper"
+      , autoHide : true
+      , start: function(event, ul) {
+        $(this).addClass("editing");
+      }
+      , stop: function(event, ul) {
+        $(this).removeClass("editing");
+      }
     }).draggable({
         cursor: "move"
       , containment: "parent"
+      , start: function(event, ul) {
+        $(this).addClass("editing");
+      }
+      , stop: function(event, ul) {
+        $(this).removeClass("editing");
+      }
     }).on('click', function() {
       $(this).draggable({ disabled: false });
     }).on('dblclick', function() {
@@ -228,6 +267,10 @@
   $(function () {
     add_text_item();
     add_rect_item();
+    
+    var c = rgb2hex($("#main-wrapper").css('background-color'));
+    $("#bg-selector").val(c);
+    $("#bg-selector").colpickSetColor('#' + c);
   });
   </script>
   </head>
@@ -240,20 +283,42 @@
 <table class="item-pane">
 
 <!-- 背景 -->
-<tr><th>背景</th><td><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="bg-selector">  </input></span></div></td></tr>
+<tr><th>背景</th><td>
+<div class="picker-pane"><span>
+#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="bg-selector"></input>
+<SELECT id="bg-selector-simple" class="simple-picker" name="simple-picker" style="width:20px;" >
+</span></div></td></tr>
 <tr><td colspan="2" class="spliter"></td></tr>
 
 <!-- 文字 -->
 <tr><th>文字</th><td><SELECT id="text-item-select" name="text-item-select" ></SELECT><input type="button" name="追加" value="追加" id="add-text"></input></td></tr>
-<tr><td>color </td><td><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="col-selector"> </input></span></div></th></tr>
+<tr><td>color </td><td><div class="picker-pane"><span>
+#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="col-selector"></input>
+<SELECT id="col-selector-simple" class="simple-picker" name="simple-picker" style="width:20px;" >
+</span></div></th></tr>
 <tr><td>size  </td><td><input type="text" value="14px" maxlength="6" size="6" id="size-text"  ></input></td></tr>
-<tr><td>weight</td><td><input type="text" value="400"  maxlength="3" size="3" id="weight-text"></input></td></tr>
+<tr><td>weight</td><td>
+<!-- <input type="text" value="400"  maxlength="3" size="3" id="weight-text"></input> -->
+<SELECT id="weight-text" name="weight-text" >
+<option value="100">100</option>
+<option value="200">200</option>
+<option value="300">300</option>
+<option value="400">400</option>
+<option value="500">500</option>
+<option value="600">600</option>
+<option value="700">700</option>
+<option value="800">800</option>
+</SELECT>
+</td></tr>
 <tr><td>font  </td><td><SELECT id="font-select" name="font-select" size="4" style="width: 100%"></SELECT></input></td></tr>
 <tr><td colspan="2" class="spliter"></td></tr>
 
 <!-- 矩形 -->
 <tr><th>矩形</th><td><SELECT id="rect-item-select" name="rect-item-select" ></SELECT><input type="button" name="追加" value="追加" id="add-rect"></input></td></tr>
-<tr><td>color </td><td><div class="picker-pane"><span>#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="rectcol-selector"></input></span></div></td></tr>
+<tr><td>color </td><td><div class="picker-pane"><span>
+#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="rectcol-selector"></input>
+<SELECT id="rectcol-selector-simple" class="simple-picker" name="simple-picker" style="width:20px;" >
+</span></div></td></tr>
 <tr><td colspan="2" class="spliter"></td></tr>
 
 </table>
@@ -301,6 +366,14 @@
   }).keyup(function(){
     $(this).colpickSetColor(this.value);
   });
+  $('.simple-picker').simpleColorPicker({
+      colorsPerLine: 16
+    , onChangeColor: function(c) {
+      var idname = $(this).attr('id').replace(/-simple/g, '');
+      $('#' + idname).val(c.replace(/#/, ''));
+      $('#' + idname).colpickSetColor(c);
+    }
+  });
   $('#size-text').change(function(){
     var index = $("#text-item-select").val();
     $('.text-item').eq(index-1).css('font-size', $(this).val());
@@ -322,13 +395,15 @@
   $('#add-rect').click(function(){
     add_rect_item();
   });
-  $('#text-rect-select').change(function(){
-    var index = $("#text-item-rect").val();
+  $('#rect-item-select').change(function(){
+    var index = $("#rect-item-select").val();
     select_rect_item($(".rect-item").eq(index-1));
+    blinkBorder($('.rect-item').eq(index-1));
   });
   $('#text-item-select').change(function(){
     var index = $("#text-item-select").val();
     select_text_item($(".text-item").eq(index-1));
+    blinkBorder($('.text-item').eq(index-1));
   });
 </script>
 
