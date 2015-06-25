@@ -75,6 +75,9 @@
     height: 20px;
   }
 
+  div.color-picker {
+    z-index: 5;
+  }
   .picker {
     margin: 0px;
     padding:0px;
@@ -323,6 +326,10 @@
 
 </table>
 
+<ul>
+<li><a href="http://hue360.herokuapp.com/" target="_blank">HUE/360</a></li>
+</ul>
+
 </td>
 <td rowspan="2" id="divider" ></td>
 <td id="main-wrapper">
@@ -367,7 +374,7 @@
     $(this).colpickSetColor(this.value);
   });
   $('.simple-picker').simpleColorPicker({
-      colorsPerLine: 16
+      colorsPerLine: 8
     , onChangeColor: function(c) {
       var idname = $(this).attr('id').replace(/-simple/g, '');
       $('#' + idname).val(c.replace(/#/, ''));
