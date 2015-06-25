@@ -28,6 +28,8 @@
     border-collapse: collapse;
     width: 100%;
     height: 100%;
+    padding: 0px;
+    margin: 0px;
   }
   body>table th {
     vertical-align: top;
@@ -58,6 +60,7 @@
     padding: 0.5em;
     font-size: 20px;
     z-index: 2;
+    float: left;
   }
   .rect-item {
     width: 40px;
@@ -66,6 +69,7 @@
     min-height: 40px;
     background: yellow;
     z-index: 1;
+    float: left;
   }
   
   #text-item-select, #rect-item-select {
@@ -133,6 +137,17 @@
   .editing {
     border: solid 1px #222;
   }
+  
+  li {
+    margin-bottom: 5px;
+  }
+  #title {
+    font-size: 32pt;
+    color: #000;
+    position: fixed;
+    left: 4px;
+    bottom: 12px;
+  }
   </style>
 
   <script>
@@ -158,6 +173,7 @@
       el.wmode = "transparent";
       document.body.appendChild(el);
     } else {
+      $("#font-select").append($('<option>').html("required flash").val("0"));
       $("#font-select").attr('disabled', true);
     }
   });
@@ -283,18 +299,20 @@
 <tr>
 <td rowspan="2" id="menu-wrapper">
 
+<span id="title">ColorScheme</span>
+
 <table class="item-pane">
 
-<!-- 背景 -->
-<tr><th>背景</th><td>
+<!-- BG -->
+<tr><th>BG</th><td>
 <div class="picker-pane"><span>
 #<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="bg-selector"></input>
 <SELECT id="bg-selector-simple" class="simple-picker" name="simple-picker" style="width:20px;" >
 </span></div></td></tr>
 <tr><td colspan="2" class="spliter"></td></tr>
 
-<!-- 文字 -->
-<tr><th>文字</th><td><SELECT id="text-item-select" name="text-item-select" ></SELECT><input type="button" name="追加" value="追加" id="add-text"></input></td></tr>
+<!-- TEXT -->
+<tr><th>TEXT</th><td><SELECT id="text-item-select" name="text-item-select" ></SELECT><input type="button" name="Add" value="Add" id="add-text"></input></td></tr>
 <tr><td>color </td><td><div class="picker-pane"><span>
 #<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="col-selector"></input>
 <SELECT id="col-selector-simple" class="simple-picker" name="simple-picker" style="width:20px;" >
@@ -316,8 +334,8 @@
 <tr><td>font  </td><td><SELECT id="font-select" name="font-select" size="4" style="width: 100%"></SELECT></input></td></tr>
 <tr><td colspan="2" class="spliter"></td></tr>
 
-<!-- 矩形 -->
-<tr><th>矩形</th><td><SELECT id="rect-item-select" name="rect-item-select" ></SELECT><input type="button" name="追加" value="追加" id="add-rect"></input></td></tr>
+<!-- RECT -->
+<tr><th>RECT</th><td><SELECT id="rect-item-select" name="rect-item-select" ></SELECT><input type="button" name="Add" value="Add" id="add-rect"></input></td></tr>
 <tr><td>color </td><td><div class="picker-pane"><span>
 #<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="rectcol-selector"></input>
 <SELECT id="rectcol-selector-simple" class="simple-picker" name="simple-picker" style="width:20px;" >
@@ -328,6 +346,7 @@
 
 <ul>
 <li><a href="http://hue360.herokuapp.com/" target="_blank">HUE/360</a></li>
+<li><a href="http://paletton.com/" target="_blank">Paletton</a></li>
 </ul>
 
 </td>
@@ -341,7 +360,7 @@
 <tr>
 <td id="foot-wrapper">
 <div id="garbageCan" class="toolbox">
-  <img src="../images/Tutorial9/recycle32.png" />
+  <img src="../images/Tutorial9/recycle32.png" title="Delete when drop an item" />
 </div>
 </td>
 </tr>
