@@ -16,6 +16,7 @@
   <script type="text/javascript" src="../lib/jquery/jquery-ui-1.11.4/jquery-ui.js"></script>
   <script type="text/javascript" src="../lib/jquery/colpick/js/colpick.js"></script>
   <script type="text/javascript" src="../lib/jquery/simple-color-picker/jquery.simple-color-picker.js"></script>
+  <script type="text/javascript" src="../lib/jquery/rainbow/rainbow.min.js"></script>
 
   <style type="text/css">
   html, body {
@@ -62,7 +63,7 @@
     z-index: 2;
     float: left;
   }
-  .rect-item {
+  .shape-item {
     width: 40px;
     min-width: 40px;
     height: 40px;
@@ -71,8 +72,13 @@
     z-index: 1;
     float: left;
   }
+  .square-item {
+  }
+  .circle-item {
+    border-radius: 50%;
+  }
   
-  #text-item-select, #rect-item-select {
+  #text-item-select, #shape-item-select {
     width: 60px;
   }
   #font-select optgroup {
@@ -143,10 +149,11 @@
   }
   #title {
     font-size: 32pt;
-    color: #000;
     position: fixed;
     left: 4px;
-    bottom: 12px;
+    bottom: 0px;
+    padding: 0px;
+    margin: 12px;
   }
   </style>
 
@@ -211,12 +218,12 @@
     $("input#weight-text").val(w);
     $("select#weight-text").val(w);
   }
-  function select_rect_item(item) {
-    var i = $(".rect-item").index($(item));
-    $("#rect-item-select").val(i+1);
+  function select_shape_item(item) {
+    var i = $(".shape-item").index($(item));
+    $("#shape-item-select").val(i+1);
     var c = rgb2hex($(item).css('background-color'));
-    $("#rectcol-selector").val(c);
-    $("#rectcol-selector").colpickSetColor('#' + c);
+    $("#shapecol-selector").val(c);
+    $("#shapecol-selector").colpickSetColor('#' + c);
   }
 
   function delete_ediable(item) {
@@ -225,8 +232,8 @@
         $("select#text-item-select").children('option:last-child').remove();
         select_text_item($(".text-item").eq(0));
     } else if( $(item).hasClass("text-item") ) {
-        $("select#rect-item-select").children('option:last-child').remove();
-        select_rect_item($(".rect-item").eq(0));
+        $("select#shape-item-select").children('option:last-child').remove();
+        select_shape_item($(".shape-item").eq(0));
     }
   }
   function update_ediable() {
@@ -256,8 +263,8 @@
     $( ".text-item").on('mousedown', function () {
       select_text_item(this);
     });
-    $( ".rect-item").on('mousedown', function () {
-      select_rect_item(this);
+    $( ".shape-item").on('mousedown', function () {
+      select_shape_item(this);
     });
     $("#garbageCan").droppable({
       activeClass: "dragaccept",
@@ -276,16 +283,16 @@
     update_ediable();
     select_text_item($(".text-item").eq(index-1));
   }
-  function add_rect_item() {
-    $('#main-wrapper').append("<div class=\"rect-item editable\" style=\"color:yellow;\" ></div>");
-    var index = $(".rect-item").size()
-    $("#rect-item-select").append($('<option>').html(index).val(index));
+  function add_shape_item(type_name) {
+    $('#main-wrapper').append("<div class=\"shape-item editable " + type_name + "-item\" style=\"color:yellow;\" ></div>");
+    var index = $(".shape-item").size()
+    $("#shape-item-select").append($('<option>').html(index).val(index));
     update_ediable();
-    select_rect_item($(".rect-item").eq(index-1));
+    select_shape_item($(".shape-item").eq(index-1));
   }
   $(function () {
     add_text_item();
-    add_rect_item();
+    add_shape_item();
     
     var c = rgb2hex($("#main-wrapper").css('background-color'));
     $("#bg-selector").val(c);
@@ -299,7 +306,13 @@
 <tr>
 <td rowspan="2" id="menu-wrapper">
 
-<span id="title">ColorScheme</span>
+<h1 id="title"
+    class="rainbow"
+    data-type="linear"
+    data-degrees="45"
+    data-color="3498db-f1c40f"
+>ColorScheme</h1>
+
 
 <table class="item-pane">
 
@@ -334,11 +347,14 @@
 <tr><td>font  </td><td><SELECT id="font-select" name="font-select" size="4" style="width: 100%"></SELECT></input></td></tr>
 <tr><td colspan="2" class="spliter"></td></tr>
 
-<!-- RECT -->
-<tr><th>RECT</th><td><SELECT id="rect-item-select" name="rect-item-select" ></SELECT><input type="button" name="Add" value="Add" id="add-rect"></input></td></tr>
+<!-- SHAPE -->
+<tr><th>SHAPE</th><td><SELECT id="shape-item-select" name="shape-item-select" ></SELECT>
+<input type="button" name="Square" value="Square" id="add-square"></input>
+<input type="button" name="Circle" value="Circle" id="add-circle"></input>
+</td></tr>
 <tr><td>color </td><td><div class="picker-pane"><span>
-#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="rectcol-selector"></input>
-<SELECT id="rectcol-selector-simple" class="simple-picker" name="simple-picker" style="width:20px;" >
+#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="shapecol-selector"></input>
+<SELECT id="shapecol-selector-simple" class="simple-picker" name="simple-picker" style="width:20px;" >
 </span></div></td></tr>
 <tr><td colspan="2" class="spliter"></td></tr>
 
@@ -384,9 +400,9 @@
         var index = $("#text-item-select").val();
         $('.text-item').eq(index-1).css('color', '#'+hex);
       }
-      if( $(el).attr('id') == "rectcol-selector" ) {
-        var index = $("#rect-item-select").val();
-        $('.rect-item').eq(index-1).css('background', '#'+hex);
+      if( $(el).attr('id') == "shapecol-selector" ) {
+        var index = $("#shape-item-select").val();
+        $('.shape-item').eq(index-1).css('background', '#'+hex);
       }
     }
   }).keyup(function(){
@@ -418,13 +434,16 @@
   $('#add-text').click(function(){
     add_text_item();
   });
-  $('#add-rect').click(function(){
-    add_rect_item();
+  $('#add-square').click(function(){
+    add_shape_item("squeare");
   });
-  $('#rect-item-select').change(function(){
-    var index = $("#rect-item-select").val();
-    select_rect_item($(".rect-item").eq(index-1));
-    blinkBorder($('.rect-item').eq(index-1));
+  $('#add-circle').click(function(){
+    add_shape_item("circle");
+  });
+  $('#shape-item-select').change(function(){
+    var index = $("#shape-item-select").val();
+    select_shape_item($(".shape-item").eq(index-1));
+    blinkBorder($('.shape-item').eq(index-1));
   });
   $('#text-item-select').change(function(){
     var index = $("#text-item-select").val();
