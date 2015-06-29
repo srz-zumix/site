@@ -14,6 +14,7 @@
   -->
   <script type="text/javascript" src="../lib/jquery/jquery-2.1.4.min.js"></script>
   <script type="text/javascript" src="../lib/jquery/jquery-ui-1.11.4/jquery-ui.js"></script>
+  <script type="text/javascript" src="../lib/jquery/jquery.ui.touch-punch.min.js"></script>
   <script type="text/javascript" src="../lib/jquery/colpick/js/colpick.js"></script>
   <script type="text/javascript" src="../lib/jquery/simple-color-picker/jquery.simple-color-picker.js"></script>
   <script type="text/javascript" src="../lib/jquery/rainbow/rainbow.min.js"></script>
@@ -76,6 +77,11 @@
   }
   .circle-item {
     border-radius: 50%;
+  }
+  .circle-item .ui-resizable-handle {
+    position: relative;
+    bottom: 20%;
+    left: 80%;
   }
   
   #text-item-select, #shape-item-select {
@@ -224,6 +230,11 @@
     var c = rgb2hex($(item).css('background-color'));
     $("#shapecol-selector").val(c);
     $("#shapecol-selector").colpickSetColor('#' + c);
+    if( $(item).hasClass("circle-item") ) {
+      $("#shape-type").text("circle");
+    } else {
+      $("#shape-type").text("square");
+    }
   }
 
   function delete_ediable(item) {
@@ -277,14 +288,22 @@
     });
   }
   function add_text_item() {
-    $('#main-wrapper').append("<div class=\"text-item editable\" ><p contenteditable=\"true\">Drag me around<br />Edit by double click</p></div>");
+    var c = "#000";
+    if( $(".text-item").size() > 0 ) {
+      c = "#" + $("#col-selector").val();
+    }
+    $('#main-wrapper').append("<div class=\"text-item editable\" style=\"color: " + c + ";\" ><p contenteditable=\"true\">Drag me around<br />Edit by double click</p></div>");
     var index = $(".text-item").size()
     $("#text-item-select").append($('<option>').html(index).val(index));
     update_ediable();
     select_text_item($(".text-item").eq(index-1));
   }
   function add_shape_item(type_name) {
-    $('#main-wrapper').append("<div class=\"shape-item editable " + type_name + "-item\" style=\"color:yellow;\" ></div>");
+    var c = "#FF0";
+    if( $(".shape-item").size() > 0 ) {
+      c = "#" + $("#shapecol-selector").val();
+    }
+    $('#main-wrapper').append("<div class=\"shape-item editable " + type_name + "-item\" style=\"background-color:" + c + ";\" ></div>");
     var index = $(".shape-item").size()
     $("#shape-item-select").append($('<option>').html(index).val(index));
     update_ediable();
@@ -356,6 +375,7 @@
 #<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="shapecol-selector"></input>
 <SELECT id="shapecol-selector-simple" class="simple-picker" name="simple-picker" style="width:20px;" >
 </span></div></td></tr>
+<tr><td>type</td><td><p id="shape-type"></p></td></tr>
 <tr><td colspan="2" class="spliter"></td></tr>
 
 </table>
