@@ -15,6 +15,8 @@
   <script type="text/javascript" src="../lib/jquery/jquery-2.1.4.min.js"></script>
   <script type="text/javascript" src="../lib/jquery/jquery-ui-1.11.4/jquery-ui.js"></script>
   <script type="text/javascript" src="../lib/jquery/jquery.ui.touch-punch.min.js"></script>
+  <script type="text/javascript" src="../lib/jquery/hammer.min.js"></script>
+  <script type="text/javascript" src="../lib/jquery/jquery.hammer.js/jquery.hammer.js"></script>
   <script type="text/javascript" src="../lib/jquery/colpick/js/colpick.js"></script>
   <script type="text/javascript" src="../lib/jquery/simple-color-picker/jquery.simple-color-picker.js"></script>
   <script type="text/javascript" src="../lib/jquery/rainbow/rainbow.min.js"></script>
@@ -270,6 +272,8 @@
       $(this).draggable({ disabled: false });
     }).on('dblclick', function() {
       $(this).draggable({ disabled: true });
+    }).hammer().on('doubletap',function(e){
+      $(this).resizable("option", {autoHide:false});
     });
     $( ".text-item").on('mousedown', function () {
       select_text_item(this);
