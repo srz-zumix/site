@@ -20,6 +20,8 @@
   <script type="text/javascript" src="../lib/jquery/colpick/js/colpick.js"></script>
   <script type="text/javascript" src="../lib/jquery/simple-color-picker/jquery.simple-color-picker.js"></script>
   <script type="text/javascript" src="../lib/jquery/rainbow/rainbow.min.js"></script>
+  
+  <script type="text/javascript" src="../lib/jquery/jquery.zclip.1.1.1/jquery.zclip.min.js"></script>
 
   <style type="text/css">
   html, body {
@@ -164,6 +166,11 @@
     margin: 12px;
   }
   </style>
+  
+  <style>
+  // zclip
+  .z-clip-wrap { position: relative; display: inline-block; }
+  </style>
 
   <script>
   // http://jabnz.blog69.fc2.com/blog-entry-664.html
@@ -207,6 +214,7 @@
     }, 400);
   }
   </script>
+  
   <script>
   function rgb2hex(rgb) {
     var ret = eval(rgb.replace(/rgb/,"((").replace(/,/ig,")*256+")).toString(16); 
@@ -273,8 +281,11 @@
     }).on('dblclick', function() {
       $(this).draggable({ disabled: true });
     }).hammer().on('doubletap',function(e){
-      $(this).resizable("option", {autoHide:false});
+      $(".editable .ui-resizable-handle").each(function() {
+        $(this).css("display", "block");
+      });
     });
+    
     $( ".text-item").on('mousedown', function () {
       select_text_item(this);
     });
@@ -402,6 +413,19 @@
 <div id="garbageCan" class="toolbox">
   <img src="../images/Tutorial9/recycle32.png" title="Delete when drop an item" />
 </div>
+
+<div class="toolbox">
+  <span class="z-clip-wrap">
+    <a href="#" id="copyCss"><img src="../images/Tutorial9/paperpencil32.png" title="Copy to clipboard" /></a>
+  </span>
+</div>
+
+<!--
+<div id="handleVisible" class="toolbox">
+  <img src="../images/ui-handle-icon_222222.png" title="Resize handle visible" />
+</div>
+-->
+
 </td>
 </tr>
 </table>
@@ -473,6 +497,19 @@
     var index = $("#text-item-select").val();
     select_text_item($(".text-item").eq(index-1));
     blinkBorder($('.text-item').eq(index-1));
+  });
+  $('#handleVisible').click(function(){
+    $(".editable .ui-resizable-handle").each(function() {
+      $(this).css("display", "block");
+    });
+  });
+  $(document).ready(function() {
+    $('#copyCss').zclip({
+      path:"../lib/jquery/jquery.zclip.1.1.1/ZeroClipboard.swf"
+    , copy: function() {
+      return "hoge";
+    }
+    });
   });
 </script>
 
