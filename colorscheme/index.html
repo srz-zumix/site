@@ -49,6 +49,7 @@
   #main-wrapper {
     background: #fffcf0;
     height: 95%;
+    paddiong: 10px;
   }
   #foot-wrapper {
     border-top: 5px solid #aaa;
@@ -60,22 +61,24 @@
   
   .text-item {
     width: 200px;
-    min-width: 100px;
     height: 60px;
-    min-height: 20px;
     padding: 0.5em;
     font-size: 20px;
     z-index: 2;
-    float: left;
   }
   .shape-item {
     width: 40px;
-    min-width: 40px;
     height: 40px;
-    min-height: 40px;
     background: yellow;
     z-index: 1;
+  }
+  .floating {
     float: left;
+  }
+  .floating:after, .floating:before {
+    content: "";
+    clear: both;
+    display: block;
   }
   .square-item {
   }
@@ -96,7 +99,10 @@
   }
 
   div.color-picker {
-    z-index: 5;
+    z-index: 99;
+  }
+  .colpick {
+    z-index: 99;
   }
   .picker {
     margin: 0px;
@@ -152,6 +158,9 @@
   }
   .editing {
     border: solid 1px #222;
+  }
+  .copied {
+    background-color: #228ef1;
   }
   
   li {
@@ -252,23 +261,50 @@
         select_shape_item($(".shape-item").eq(0));
     }
   }
+  var prevSizeH = 0;
+  
   function update_ediable() {
     $( ".editable" ).resizable({
         containment: "#main-wrapper"
       , autoHide : true
-      , start: function(event, ul) {
+      , minWidth : 40
+      , minHeight: 40
+      , start: function(event, ui) {
         $(this).addClass("editing");
+        prevSizeH = ui.originalSize.height;
       }
-      , stop: function(event, ul) {
+      , resize: function(event, ui) {
+        $(this).css("left", ui.originalPosition.left);
+        $(this).css("top", ui.originalPosition.top);
+
+        var diff = prevSizeH - ui.size.height;
+        prevSizeH = ui.size.height;
+        var index = $(".editable").index(this);
+        $(".editable:" + "gt(" + index + ")").each(function() {
+          var top = $(this).css("top");
+          if( top.indexOf("auto") == 0 )
+          {
+            top = diff;
+          }
+          else
+          {
+            top = parseInt(top.replace(/px$/, ''));
+            top += diff;
+          }
+          $(this).css("top", top);
+        });
+      }
+      , stop: function(event, ui) {
         $(this).removeClass("editing");
       }
     }).draggable({
         cursor: "move"
       , containment: "parent"
-      , start: function(event, ul) {
+      , refreshPositions: true
+      , start: function(event, ui) {
         $(this).addClass("editing");
       }
-      , stop: function(event, ul) {
+      , stop: function(event, ui) {
         $(this).removeClass("editing");
       }
     }).on('click', function() {
@@ -324,8 +360,8 @@
     add_shape_item();
     
     var c = rgb2hex($("#main-wrapper").css('background-color'));
-    $("#bg-selector").val(c);
-    $("#bg-selector").colpickSetColor('#' + c);
+    $("#bgcol-selector").val(c);
+    $("#bgcol-selector").colpickSetColor('#' + c);
   });
   </script>
   </head>
@@ -348,8 +384,8 @@
 <!-- BG -->
 <tr><th>BG</th><td>
 <div class="picker-pane"><span>
-#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="bg-selector"></input>
-<SELECT id="bg-selector-simple" class="simple-picker" name="simple-picker" style="width:20px;" >
+#<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="bgcol-selector"></input>
+<SELECT id="bgcol-selector-simple" class="simple-picker" name="simple-picker" style="width:20px;" >
 </span></div></td></tr>
 <tr><td colspan="2" class="spliter"></td></tr>
 
@@ -410,10 +446,8 @@
 </div>
 
 <div class="toolbox">
-  <span style="position: relative;">
-  <a href="#" id="copyCss" width="32px">
-    <img src="../images/Tutorial9/paperpencil32.png" title="Copy to clipboard" />
-  </a>
+  <span style="position: relative; padding: 4px;">
+    <img id="copyCss"   src="../images/Tutorial9/paperpencil32.png" title="Copy to clipboard" style="vertical-align: top; width: 32; height: 32;" />
   </span>
 </div>
 
@@ -438,7 +472,7 @@
       if(!bySetColor) {
         $(el).val(hex);
       }
-      if( $(el).attr('id') == "bg-selector" ) {
+      if( $(el).attr('id') == "bgcol-selector" ) {
         $('#main-wrapper').css('background', '#'+hex);
       }
       if( $(el).attr('id') == "col-selector" ) {
@@ -504,7 +538,28 @@
     $('#copyCss').zclip({
       path:"../lib/jquery/jquery.zclip.1.1.1/ZeroClipboard.swf"
     , copy: function() {
-      return "hoge";
+      var str = "body { background-color: #";
+      str += $('#bgcol-selector').val();
+      str += "; }\r\n";
+      $('.text-item').each(function(index) {
+        var c = rgb2hex($(this).css('color'));
+        str += ".text-item" + index + " { color: #";
+        str += c;
+        str += "; }\r\n";
+      });
+      $('.shape-item').each(function(index) {
+        var c = rgb2hex($(this).css('color'));
+        str += ".shape-item" + index + " { background-color: #";
+        str += c;
+        str += "; }\r\n";
+      });
+      return str;
+    }
+    , afterCopy: function() {
+      $(this).attr({'src':"../images/Tutorial9/paperpencil32_228ef1.png"});
+      setTimeout(function() {
+        $('#copyCss').attr({'src':"../images/Tutorial9/paperpencil32.png"});
+      }, 1000);
     }
     });
   });
