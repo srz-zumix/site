@@ -9,6 +9,10 @@
   <link rel="stylesheet" href="../lib/jquery/jquery-ui-1.11.4/jquery-ui.css" type="text/css" />
   <link rel="stylesheet" href="../lib/jquery/simple-color-picker/jquery.simple-color-picker.css" type="text/css" />
 
+  <link rel="stylesheet" href="layout.css" type="text/css" />
+  <link rel="stylesheet" href="toolbox.css" type="text/css" />
+  <link rel="stylesheet" href="function.css" type="text/css" />
+
   <!--
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js""></script>
   -->
@@ -22,348 +26,10 @@
   <script type="text/javascript" src="../lib/jquery/rainbow/rainbow.min.js"></script>
   
   <script type="text/javascript" src="../lib/jquery/jquery.zclip.1.1.1/jquery.zclip.min.js"></script>
-
-  <style type="text/css">
-  html, body {
-    height: 100%;
-    min-height: 100%;
-    margin: 0px;
-    padding: 0px;
-  }
-  body>table {
-    border-collapse: collapse;
-    width: 100%;
-    height: 100%;
-    padding: 0px;
-    margin: 0px;
-  }
-  body>table th {
-    vertical-align: top;
-  }
-  body>table td {
-    vertical-align: top;
-  }
-  #menu-wrapper {
-    width: 20em;
-  }
-  #main-wrapper {
-    background: #fffcf0;
-    height: 95%;
-    paddiong: 10px;
-  }
-  #foot-wrapper {
-    border-top: 5px solid #aaa;
-  }
-  #divider {
-    width: 5px;
-    background: #aaa;
-  }
   
-  .text-item {
-    width: 200px;
-    height: 60px;
-    padding: 0.5em;
-    font-size: 20px;
-    z-index: 2;
-  }
-  .shape-item {
-    width: 40px;
-    height: 40px;
-    background: yellow;
-    z-index: 1;
-  }
-  .floating {
-    float: left;
-  }
-  .floating:after, .floating:before {
-    content: "";
-    clear: both;
-    display: block;
-  }
-  .square-item {
-  }
-  .circle-item {
-    border-radius: 50%;
-  }
-  .circle-item .ui-resizable-handle {
-    position: relative;
-    bottom: 20%;
-    left: 80%;
-  }
+  <script type="text/javascript" src="fontlist.js"></script>
+  <script type="text/javascript" src="function.js"></script>
   
-  #text-item-select, #shape-item-select {
-    width: 60px;
-  }
-  #font-select optgroup {
-    height: 20px;
-  }
-
-  div.color-picker {
-    z-index: 99;
-  }
-  .colpick {
-    z-index: 99;
-  }
-  .picker {
-    margin: 0px;
-    padding:0px;
-    border:0;
-    width:70px;
-    height:20px;
-    line-height:20px;
-  }
-  
-  .item-pane {
-    width: 97%;
-    background: #ccc;
-    border: solid 1px #000;
-    margin: 4px;
-    padding: 4px;
-  }
-  .item-pane th {
-    text-align: left;
-  }
-  .item-pane td {
-    padding: 0.2em;
-    vertical-align: middle;
-  }
-  .item-pane span {
-    background: white;
-    margin: 0.25em;
-    display: inline-block;
-  }
-  .item-pane .spliter {
-    border-top: 1px solid #000;
-  }
-  .item-pane .picker-pane {
-    padding: 0.2em;
-    background: white;
-    box-shadow: 0px 0px 8px rgba(0,0,0,0.4);
-  }
-
-  .toolbox {
-    width: 40px;
-    height: 40px;
-    text-align:center;
-    vertical-align: middle;
-    display: table-cell;
-  }
-  #garbageCan img {
-    vertical-align: middle;
-  }
-  .dragaccept {
-  }
-  .dragover {
-    background: #c2cbff;
-  }
-  .editing {
-    border: solid 1px #222;
-  }
-  .copied {
-    background-color: #228ef1;
-  }
-  
-  li {
-    margin-bottom: 5px;
-  }
-  #title {
-    font-size: 32pt;
-    position: fixed;
-    left: 4px;
-    bottom: 0px;
-    padding: 0px;
-    margin: 12px;
-  }
-  </style>
-  
-  <script>
-  // http://jabnz.blog69.fc2.com/blog-entry-664.html
-  function addFontsData(fonts){
-    for( i=0; i < fonts.length; i++) {
-      var g = $('<optgroup>').css('font-family', fonts[i]).appendTo($("#font-select"));
-      g.append($('<option>').html(fonts[i]).val(fonts[i]));
-    }
-  }
-  $(function() {
-    var flash = 0;
-    for(i=0;i<navigator.mimeTypes.length;i++){
-        if (navigator.mimeTypes[i].suffixes == "swf"){
-            flash = 1;
-        }
-    }
-    if(flash) {
-      var el = document.createElement("embed");
-      el.src = "getFontsList.swf?function=addFontsData";
-      el.width = 1;
-      el.height = 1;
-      el.wmode = "transparent";
-      document.body.appendChild(el);
-    } else {
-      $("#font-select").append($('<option>').html("required flash").val("0"));
-      $("#font-select").attr('disabled', true);
-    }
-  });
-  </script>
-  
-  <script>
-  function blinkBorder(item) {
-    var cnt = 0;
-    $(item).addClass('editing');
-    var timer = setInterval(function () {
-        cnt++
-        $(item).toggleClass('editing');
-        if (cnt == 3) {
-            clearInterval(timer);
-        }
-    }, 400);
-  }
-  </script>
-  
-  <script>
-  function rgb2hex(rgb) {
-    var ret = eval(rgb.replace(/rgb/,"((").replace(/,/ig,")*256+")).toString(16); 
-    return (("000000" + ret).substring( 6 + ret.length - 6));
-  }
-  function select_text_item(item) {
-    var i = $(".text-item").index($(item));
-    $("#text-item-select").val(i+1);
-    var c = rgb2hex($(item).css('color'));
-    $("#col-selector").val(c);
-    $("#col-selector").colpickSetColor('#' + c);
-    
-    var s = $(item).css('font-size');
-    $("#size-text").val(s);
-
-    var w = $(item).css('font-weight');
-    $("input#weight-text").val(w);
-    $("select#weight-text").val(w);
-  }
-  function select_shape_item(item) {
-    var i = $(".shape-item").index($(item));
-    $("#shape-item-select").val(i+1);
-    var c = rgb2hex($(item).css('background-color'));
-    $("#shapecol-selector").val(c);
-    $("#shapecol-selector").colpickSetColor('#' + c);
-    if( $(item).hasClass("circle-item") ) {
-      $("#shape-type").text("circle");
-    } else {
-      $("#shape-type").text("square");
-    }
-  }
-
-  function delete_ediable(item) {
-    $(item).remove();
-    if( $(item).hasClass("text-item") ) {
-        $("select#text-item-select").children('option:last-child').remove();
-        select_text_item($(".text-item").eq(0));
-    } else if( $(item).hasClass("text-item") ) {
-        $("select#shape-item-select").children('option:last-child').remove();
-        select_shape_item($(".shape-item").eq(0));
-    }
-  }
-  var prevSizeH = 0;
-  
-  function update_ediable() {
-    $( ".editable" ).resizable({
-        containment: "#main-wrapper"
-      , autoHide : true
-      , minWidth : 40
-      , minHeight: 40
-      , start: function(event, ui) {
-        $(this).addClass("editing");
-        prevSizeH = ui.originalSize.height;
-      }
-      , resize: function(event, ui) {
-        $(this).css("left", ui.originalPosition.left);
-        $(this).css("top", ui.originalPosition.top);
-
-        var diff = prevSizeH - ui.size.height;
-        prevSizeH = ui.size.height;
-        var index = $(".editable").index(this);
-        $(".editable:" + "gt(" + index + ")").each(function() {
-          var top = $(this).css("top");
-          if( top.indexOf("auto") == 0 )
-          {
-            top = diff;
-          }
-          else
-          {
-            top = parseInt(top.replace(/px$/, ''));
-            top += diff;
-          }
-          $(this).css("top", top);
-        });
-      }
-      , stop: function(event, ui) {
-        $(this).removeClass("editing");
-      }
-    }).draggable({
-        cursor: "move"
-      , containment: "parent"
-      , refreshPositions: true
-      , start: function(event, ui) {
-        $(this).addClass("editing");
-      }
-      , stop: function(event, ui) {
-        $(this).removeClass("editing");
-      }
-    }).on('click', function() {
-      $(this).draggable({ disabled: false });
-    }).on('dblclick', function() {
-      $(this).draggable({ disabled: true });
-    }).hammer().on('doubletap',function(e){
-      $(".editable .ui-resizable-handle").each(function() {
-        $(this).css("display", "block");
-      });
-    });
-    
-    $( ".text-item").on('mousedown', function () {
-      select_text_item(this);
-    });
-    $( ".shape-item").on('mousedown', function () {
-      select_shape_item(this);
-    });
-    $("#garbageCan").droppable({
-      activeClass: "dragaccept",
-      hoverClass: "dragover",
-      tolerance: "pointer",
-      drop: function(event, ui) {
-        $('body').css('cursor', 'auto');
-        delete_ediable($(ui.draggable));
-      }
-    });
-  }
-  function add_text_item() {
-    var c = "#000";
-    if( $(".text-item").size() > 0 ) {
-      c = "#" + $("#col-selector").val();
-    }
-    $('#main-wrapper').append("<div class=\"text-item editable\" style=\"color: " + c + ";\" ><p contenteditable=\"true\">Drag me around<br />Edit by double click</p></div>");
-    var index = $(".text-item").size()
-    $("#text-item-select").append($('<option>').html(index).val(index));
-    update_ediable();
-    select_text_item($(".text-item").eq(index-1));
-  }
-  function add_shape_item(type_name) {
-    var c = "#FF0";
-    if( $(".shape-item").size() > 0 ) {
-      c = "#" + $("#shapecol-selector").val();
-    }
-    $('#main-wrapper').append("<div class=\"shape-item editable " + type_name + "-item\" style=\"background-color:" + c + ";\" ></div>");
-    var index = $(".shape-item").size()
-    $("#shape-item-select").append($('<option>').html(index).val(index));
-    update_ediable();
-    select_shape_item($(".shape-item").eq(index-1));
-  }
-  $(function () {
-    add_text_item();
-    add_shape_item();
-    
-    var c = rgb2hex($("#main-wrapper").css('background-color'));
-    $("#bgcol-selector").val(c);
-    $("#bgcol-selector").colpickSetColor('#' + c);
-  });
-  </script>
   </head>
 <body>
 
@@ -414,8 +80,8 @@
 
 <!-- SHAPE -->
 <tr><th>SHAPE</th><td><SELECT id="shape-item-select" name="shape-item-select" ></SELECT>
-<input type="button" name="Square" value="Square" id="add-square"></input>
-<input type="button" name="Circle" value="Circle" id="add-circle"></input>
+<input type="button" name="Square" value="Square" class="add-shape" shape-type="square" ></input>
+<input type="button" name="Circle" value="Circle" class="add-shape" shape-type="circle" ></input>
 </td></tr>
 <tr><td>color </td><td><div class="picker-pane"><span>
 #<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="shapecol-selector"></input>
@@ -457,44 +123,24 @@
 </div>
 -->
 
+<div id="text-item-droppable" class="toolbox">
+  <img src="./images/text.png" title="TEXT item" />
+</div>
+<div class="shape-item-droppable toolbox" shape-type="square" >
+  <img src="./images/square.png" title="SHAPE square item" />
+</div>
+<div class="shape-item-droppable toolbox" shape-type="circle" >
+  <img src="./images/circle.png" title="SHAPE circle item" />
+</div>
+
 </td>
 </tr>
 </table>
 
+<script type="text/javascript" src="colorpicker.js"></script>
+<script type="text/javascript" src="toolbox.js"></script>
+
 <script type="text/javascript">
-  $('.picker').colpick({
-    layout:'full',
-    submit:0,
-    colorScheme:'light',
-    onChange:function(hsb,hex,rgb,el,bySetColor) {
-      $(el).parent().parent().css('background','#'+hex);
-      // Fill the text box just if the color was set using the picker, and not the colpickSetColor function.
-      if(!bySetColor) {
-        $(el).val(hex);
-      }
-      if( $(el).attr('id') == "bgcol-selector" ) {
-        $('#main-wrapper').css('background', '#'+hex);
-      }
-      if( $(el).attr('id') == "col-selector" ) {
-        var index = $("#text-item-select").val();
-        $('.text-item').eq(index-1).css('color', '#'+hex);
-      }
-      if( $(el).attr('id') == "shapecol-selector" ) {
-        var index = $("#shape-item-select").val();
-        $('.shape-item').eq(index-1).css('background', '#'+hex);
-      }
-    }
-  }).keyup(function(){
-    $(this).colpickSetColor(this.value);
-  });
-  $('.simple-picker').simpleColorPicker({
-      colorsPerLine: 8
-    , onChangeColor: function(c) {
-      var idname = $(this).attr('id').replace(/-simple/g, '');
-      $('#' + idname).val(c.replace(/#/, ''));
-      $('#' + idname).colpickSetColor(c);
-    }
-  });
   $('#size-text').change(function(){
     var index = $("#text-item-select").val();
     $('.text-item').eq(index-1).css('font-size', $(this).val());
@@ -507,17 +153,11 @@
     var index = $("#text-item-select").val();
     $('.text-item').eq(index-1).css('font-family', $(this).val());
   });
-  $('.picker-pane').click(function(){
-    $(this).find('.picker').trigger("click");
-  });
   $('#add-text').click(function(){
     add_text_item();
   });
-  $('#add-square').click(function(){
-    add_shape_item("squeare");
-  });
-  $('#add-circle').click(function(){
-    add_shape_item("circle");
+  $('.add-shape').click(function(){
+    add_shape_item($(this).attr("shape-type"));
   });
   $('#shape-item-select').change(function(){
     var index = $("#shape-item-select").val();
@@ -528,40 +168,6 @@
     var index = $("#text-item-select").val();
     select_text_item($(".text-item").eq(index-1));
     blinkBorder($('.text-item').eq(index-1));
-  });
-  $('#handleVisible').click(function(){
-    $(".editable .ui-resizable-handle").each(function() {
-      $(this).css("display", "block");
-    });
-  });
-  $(document).ready(function() {
-    $('#copyCss').zclip({
-      path:"../lib/jquery/jquery.zclip.1.1.1/ZeroClipboard.swf"
-    , copy: function() {
-      var str = "body { background-color: #";
-      str += $('#bgcol-selector').val();
-      str += "; }\r\n";
-      $('.text-item').each(function(index) {
-        var c = rgb2hex($(this).css('color'));
-        str += ".text-item" + index + " { color: #";
-        str += c;
-        str += "; }\r\n";
-      });
-      $('.shape-item').each(function(index) {
-        var c = rgb2hex($(this).css('color'));
-        str += ".shape-item" + index + " { background-color: #";
-        str += c;
-        str += "; }\r\n";
-      });
-      return str;
-    }
-    , afterCopy: function() {
-      $(this).attr({'src':"../images/Tutorial9/paperpencil32_228ef1.png"});
-      setTimeout(function() {
-        $('#copyCss').attr({'src':"../images/Tutorial9/paperpencil32.png"});
-      }, 1000);
-    }
-    });
   });
 </script>
 

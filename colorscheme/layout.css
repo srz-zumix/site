@@ -1,0 +1,55 @@
+html, body {
+  height: 100%;
+  min-height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+body>table {
+  border-collapse: collapse;
+  width: 100%;
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+}
+body>table th {
+  vertical-align: top;
+}
+body>table td {
+  vertical-align: top;
+}
+#menu-wrapper {
+  width: 20em;
+}
+#main-wrapper {
+  background: #fffcf0;
+  height: 95%;
+  paddiong: 10px;
+}
+#foot-wrapper {
+  border-top: 5px solid #aaa;
+}
+#divider {
+  width: 5px;
+  background: #aaa;
+}
+.floating {
+  float: left;
+}
+.floating:after, .floating:before {
+  content: "";
+  clear: both;
+  display: block;
+}
+
+#title {
+  font-size: 32pt;
+  position: fixed;
+  left: 4px;
+  bottom: 0px;
+  padding: 0px;
+  margin: 12px;
+}
+
+li {
+  margin-bottom: 5px;
+}

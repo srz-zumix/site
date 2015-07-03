@@ -1,0 +1,10 @@
+.toolbox {
+  width: 40px;
+  height: 40px;
+  text-align:center;
+  vertical-align: middle;
+  display: table-cell;
+}
+#garbageCan img {
+  vertical-align: middle;
+}

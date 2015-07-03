@@ -1,0 +1,82 @@
+.text-item {
+  width: 200px;
+  height: 60px;
+  padding: 0.5em;
+  font-size: 20px;
+  z-index: 2;
+}
+.shape-item {
+  width: 40px;
+  height: 40px;
+  background: yellow;
+  z-index: 1;
+}
+.square-item {
+}
+.circle-item {
+  border-radius: 50%;
+}
+.circle-item .ui-resizable-handle {
+  position: relative;
+  bottom: 20%;
+  left: 80%;
+}
+
+#text-item-select, #shape-item-select {
+  width: 60px;
+}
+#font-select optgroup {
+  height: 20px;
+}
+
+div.color-picker {
+  z-index: 99;
+}
+.colpick {
+  z-index: 99;
+}
+.picker {
+  margin: 0px;
+  padding:0px;
+  border:0;
+  width:70px;
+  height:20px;
+  line-height:20px;
+}
+
+.item-pane {
+  width: 97%;
+  background: #ccc;
+  border: solid 1px #000;
+  margin: 4px;
+  padding: 4px;
+}
+.item-pane th {
+  text-align: left;
+}
+.item-pane td {
+  padding: 0.2em;
+  vertical-align: middle;
+}
+.item-pane span {
+  background: white;
+  margin: 0.25em;
+  display: inline-block;
+}
+.item-pane .spliter {
+  border-top: 1px solid #000;
+}
+.item-pane .picker-pane {
+  padding: 0.2em;
+  background: white;
+  box-shadow: 0px 0px 8px rgba(0,0,0,0.4);
+}
+
+.dragaccept {
+}
+.dragover {
+  background: #c2cbff;
+}
+.editing {
+  border: solid 1px #222;
+}
