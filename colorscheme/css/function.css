@@ -4,12 +4,14 @@
   padding: 0.5em;
   font-size: 20px;
   z-index: 2;
+  display: block;
 }
 .shape-item {
   width: 40px;
   height: 40px;
   background: yellow;
   z-index: 1;
+  display: block;
 }
 .square-item {
 }
