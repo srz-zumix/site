@@ -76,6 +76,16 @@ function delete_ediable(item) {
 var prevSizeH = 0;
 var autoHide=true;
 
+function update_auto_hide(item)
+{
+  if( !autoHide )
+  {
+    $(item).children(".ui-resizable-handle").each(function() {
+      $(this).css("display", "block");
+    });
+  }
+}
+
 function update_ediable() {
   $( ".editable" ).resizable({
       containment: "#main-wrapper"
@@ -126,17 +136,11 @@ function update_ediable() {
   }).on('dblclick', function() {
     $(this).draggable({ disabled: true });
   }).hammer().on('doubletap',function(e){
-    $(".editable .ui-resizable-handle").each(function() {
+    $(this).children(".ui-resizable-handle").each(function() {
       $(this).css("display", "block");
     });
   }).on('mouseout', function() {
-    if( !autoHide )
-    {
-      console.log("test");
-      $(this).children(".ui-resizable-handle").each(function() {
-        $(this).css("display", "block");
-      });
-    }
+    update_auto_hide($(this));
   });
   
   $( ".text-item").on('mousedown', function () {
@@ -165,6 +169,11 @@ function putRandom(added) {
   added.css("left", pos.left);
   added.css("top", pos.top);
 }
+
+function on_added(item) {
+  update_auto_hide(item);
+}
+
 function add_text_item() {
   var c = "#000";
   if( $(".text-item").size() > 0 ) {
@@ -176,6 +185,7 @@ function add_text_item() {
   update_ediable();
   var added = $(".text-item").eq(index-1);
   select_text_item(added);
+  on_added(added);
   return added;
 }
 function add_shape_item(type_name) {
@@ -189,6 +199,7 @@ function add_shape_item(type_name) {
   var added = $(".shape-item").eq(index-1);
   update_ediable();
   select_shape_item(added);
+  on_added(added);
   return added;
 }
 $(function () {
