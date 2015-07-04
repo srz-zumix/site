@@ -5,6 +5,7 @@
   font-size: 20px;
   z-index: 2;
   display: block;
+  position: absolute;
 }
 .shape-item {
   width: 40px;
@@ -12,6 +13,7 @@
   background: yellow;
   z-index: 1;
   display: block;
+  position: absolute;
 }
 .square-item {
 }

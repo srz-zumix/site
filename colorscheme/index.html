@@ -118,11 +118,9 @@
   </span>
 </div>
 
-<!--
 <div id="handleVisible" class="toolbox">
   <img src="../images/ui-handle-icon_222222.png" title="Resize handle visible" />
 </div>
--->
 
 <div id="text-item-droppable" class="toolbox">
   <img src="./images/text.png" title="TEXT item" />
@@ -155,10 +153,12 @@
     $('.text-item').eq(index-1).css('font-family', $(this).val());
   });
   $('#add-text').click(function(){
-    add_text_item();
+    var added = add_text_item();
+    putRandom(added);
   });
   $('.add-shape').click(function(){
-    add_shape_item($(this).attr("shape-type"));
+    var added = add_shape_item($(this).attr("shape-type"));
+    putRandom(added);
   });
   $('#shape-item-select').change(function(){
     var index = $("#shape-item-select").val();

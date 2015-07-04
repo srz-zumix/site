@@ -1,3 +1,25 @@
+function onResize() {
+  $('#main-wrapper').height($(window).height() - 54);
+}
+
+$(window).resize(function() {
+  onResize();
+});
+
+function getItemPosition(item, drop_pos)
+{
+  var offset = item.offset();
+  var h = item.height();
+  if( item.css("position") == "absolute" )
+  {
+    return { top: drop_pos.top - h/2, left: drop_pos.left };
+  }
+  else
+  {
+    return { top: drop_pos.top - offset.top - h/2, left: drop_pos.left - offset.left };
+  }
+}
+
 function blinkBorder(item) {
   var cnt = 0;
   $(item).addClass('editing');
@@ -52,6 +74,7 @@ function delete_ediable(item) {
   }
 }
 var prevSizeH = 0;
+var autoHide=true;
 
 function update_ediable() {
   $( ".editable" ).resizable({
@@ -64,6 +87,7 @@ function update_ediable() {
       prevSizeH = ui.originalSize.height;
     }
     , resize: function(event, ui) {
+      if( $(this).css("position") == "absolute" ) return;
       $(this).css("left", ui.originalPosition.left);
       $(this).css("top", ui.originalPosition.top);
 
@@ -105,6 +129,14 @@ function update_ediable() {
     $(".editable .ui-resizable-handle").each(function() {
       $(this).css("display", "block");
     });
+  }).on('mouseout', function() {
+    if( !autoHide )
+    {
+      console.log("test");
+      $(this).children(".ui-resizable-handle").each(function() {
+        $(this).css("display", "block");
+      });
+    }
   });
   
   $( ".text-item").on('mousedown', function () {
@@ -122,6 +154,16 @@ function update_ediable() {
       delete_ediable($(ui.draggable));
     }
   });
+}
+function putRandom(added) {
+  var offset = $('#main-wrapper').offset();
+  var h = $('#main-wrapper').height();
+  var w = $('#main-wrapper').width() - added.width();
+  x = Math.round( Math.random()*w );
+  y = Math.round( Math.random()*(h-added.height()) );
+  pos = getItemPosition(added, {top: offset.top + y, left: offset.left+x});
+  added.css("left", pos.left);
+  added.css("top", pos.top);
 }
 function add_text_item() {
   var c = "#000";
@@ -150,6 +192,7 @@ function add_shape_item(type_name) {
   return added;
 }
 $(function () {
+  onResize();
   add_text_item();
   add_shape_item();
   

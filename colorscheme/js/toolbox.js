@@ -27,10 +27,24 @@ $(document).ready(function() {
   }
   });
 });
+
 $('#handleVisible').click(function(){
-  $(".editable .ui-resizable-handle").each(function() {
-    $(this).css("display", "block");
-  });
+  if( autoHide )
+  {
+    $(this).children('img').attr({'src':"../images/ui-handle-icon_228ef1.png"});
+    autoHide = false;
+    $(".editable .ui-resizable-handle").each(function() {
+      $(this).css("display", "block");
+    });
+  }
+  else
+  {
+    $(this).children('img').attr({'src':"../images/ui-handle-icon_222222.png"});
+    autoHide = true;
+    $(".editable .ui-resizable-handle").each(function() {
+      $(this).css("display", "none");
+    });
+  }
 });
 
 $('#text-item-droppable').draggable({
@@ -39,10 +53,9 @@ $('#text-item-droppable').draggable({
   , helper: 'clone'
   , stop : function(event, ui) {
     var added = add_text_item();
-    var offset = added.offset();
-    var h = added.height();
-    added.css("top", ui.position.top - offset.top - h/2);
-    added.css("left", ui.position.left - offset.left);
+    var pos = getItemPosition(added, ui.position);
+    added.css("top", pos.top);
+    added.css("left", pos.left);
   }
 });
 
@@ -53,10 +66,9 @@ $('.shape-item-droppable').draggable({
   , stop : function(event, ui) {
     var t = $(this).attr("shape-type");
     var added = add_shape_item(t);
-    var offset = added.offset();
-    var h = added.height();
-    added.css("top", ui.position.top - offset.top - h/2);
-    added.css("left", ui.position.left - offset.left);
+    var pos = getItemPosition(added, ui.position);
+    added.css("top", pos.top);
+    added.css("left", pos.left);
   }
 });
 

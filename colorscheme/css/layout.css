@@ -4,6 +4,7 @@ html, body {
   max-height: 100%;
   margin: 0px;
   padding: 0px;
+  overflow: hidden;
 }
 body>table {
   border-collapse: collapse;
@@ -12,6 +13,7 @@ body>table {
   max-height: 100%;
   padding: 0px;
   margin: 0px;
+  table-layout: fixed;
 }
 body>table th {
   vertical-align: top;
@@ -25,9 +27,8 @@ body>table td {
 }
 #main-wrapper {
   background: #fffcf0;
-  padding-bottom: 2px;
-  overflow: hidden;
-  height: 100%;
+  overflow-y: hidden;
+  height: 100;
   display: block;
 }
 #foot-wrapper {

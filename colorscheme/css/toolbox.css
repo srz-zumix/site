@@ -8,3 +8,10 @@
 #garbageCan img {
   vertical-align: middle;
 }
+#handleVisible:hover {
+  cursor: pointer;
+}
+#text-item-droppable:hover, .shape-item-droppable:hover {
+  cursor: pointer;
+}
+
