@@ -12,7 +12,7 @@ $(document).ready(function() {
       str += "; }\r\n";
     });
     $('.shape-item').each(function(index) {
-      var c = rgb2hex($(this).css('color'));
+      var c = rgb2hex($(this).css('background-color'));
       str += ".shape-item" + index + " { background-color: #";
       str += c;
       str += "; }\r\n";

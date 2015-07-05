@@ -136,6 +136,7 @@ function update_ediable() {
   }).on('dblclick', function() {
     $(this).draggable({ disabled: true });
   }).hammer().on('doubletap',function(e){
+    $(this).draggable({ disabled: true });
     $(this).children(".ui-resizable-handle").each(function() {
       $(this).css("display", "block");
     });
@@ -174,12 +175,18 @@ function on_added(item) {
   update_auto_hide(item);
 }
 
+function get_current_text() {
+  var index = $("#text-item-select").val();
+  return $(".text-item").eq(index-1).text();
+}
 function add_text_item() {
   var c = "#000";
+  var t = "Drag me around<br />Edit by double click";
   if( $(".text-item").size() > 0 ) {
     c = "#" + $("#col-selector").val();
+    t = get_current_text();
   }
-  $('#main-wrapper').append("<div class=\"text-item editable\" style=\"color: " + c + ";\" ><p contenteditable=\"true\">Drag me around<br />Edit by double click</p></div>");
+  $('#main-wrapper').append("<div class=\"text-item editable\" style=\"color: " + c + ";\" ><p contenteditable=\"true\">" + t + "</p></div>");
   var index = $(".text-item").size()
   $("#text-item-select").append($('<option>').html(index).val(index));
   update_ediable();
