@@ -170,6 +170,19 @@
     select_text_item($(".text-item").eq(index-1));
     blinkBorder($('.text-item').eq(index-1));
   });
+  function preload(arrayOfImages)
+  {
+    $(arrayOfImages).each(function()
+    {
+        $('<img/>')[0].src = this;
+    }
+  }
+  $(function() {
+    preload([
+      '../images/Tutorial9/recycle32_228ef1.png'
+    , '../images/Tutorial9/paperpencil32_228ef1.png'
+    ]);
+  }
 </script>
 
 </body>
