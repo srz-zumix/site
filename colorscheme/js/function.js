@@ -127,9 +127,11 @@ function update_ediable() {
     , refreshPositions: true
     , start: function(event, ui) {
       $(this).addClass("editing");
+      $('#garbageCan').children('img').attr({'src':"../images/Tutorial9/recycle32_228ef1.png"});
     }
     , stop: function(event, ui) {
       $(this).removeClass("editing");
+      $('#garbageCan').children('img').attr({'src':"../images/Tutorial9/recycle32.png"});
     }
   }).on('click', function() {
     $(this).draggable({ disabled: false });
