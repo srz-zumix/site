@@ -133,10 +133,6 @@ function update_ediable() {
       $(this).removeClass("editing");
       $('#garbageCan').children('img').attr({'src':"../images/Tutorial9/recycle32.png"});
     }
-  }).on('click', function() {
-    $(this).draggable({ disabled: false });
-  }).on('dblclick', function() {
-    $(this).draggable({ disabled: true });
   }).hammer().on('doubletap',function(e){
     $(this).draggable({ disabled: true });
     $(this).children(".ui-resizable-handle").each(function() {
@@ -144,14 +140,28 @@ function update_ediable() {
     });
   }).on('mouseout', function() {
     update_auto_hide($(this));
+  }).on('mousedown', function () {
+    $(this).children('.selectable').focus();
+  }).on('keydown', function(e) {
+    if( $(this).children('.selectable').is(':focus') ) {
+      if(e.keyCode == 46) {
+        delete_ediable($(this));
+      }
+    }
   });
   
   $( ".text-item").on('mousedown', function () {
     select_text_item(this);
+  }).on('click', function() {
+    $(this).draggable({ disabled: false });
+  }).on('dblclick', function() {
+    $(this).draggable({ disabled: true });
+    $(this).children('p').focus();
   });
   $( ".shape-item").on('mousedown', function () {
     select_shape_item(this);
   });
+  
   $("#garbageCan").droppable({
     activeClass: "dragaccept",
     hoverClass: "dragover",
@@ -175,6 +185,7 @@ function putRandom(added) {
 
 function on_added(item) {
   update_auto_hide(item);
+  item.children('.selectable').attr('tabindex', '0');
 }
 
 function get_current_text() {
@@ -188,7 +199,7 @@ function add_text_item() {
     c = "#" + $("#col-selector").val();
     t = get_current_text();
   }
-  $('#main-wrapper').append("<div class=\"text-item editable\" style=\"color: " + c + ";\" ><p contenteditable=\"true\">" + t + "</p></div>");
+  $('#main-wrapper').append("<div class=\"text-item editable\" style=\"color: " + c + ";\" ><div class=\"selectable\"><p contenteditable=\"true\">" + t + "</p></div></div>");
   var index = $(".text-item").size()
   $("#text-item-select").append($('<option>').html(index).val(index));
   update_ediable();
@@ -202,7 +213,7 @@ function add_shape_item(type_name) {
   if( $(".shape-item").size() > 0 ) {
     c = "#" + $("#shapecol-selector").val();
   }
-  $('#main-wrapper').append("<div class=\"shape-item editable " + type_name + "-item\" style=\"background-color:" + c + ";\" ></div>");
+  $('#main-wrapper').append("<div class=\"shape-item editable " + type_name + "-item\" style=\"background-color:" + c + ";\" ><div class=\"selectable\"></div></div>");
   var index = $(".shape-item").size()
   $("#shape-item-select").append($('<option>').html(index).val(index));
   var added = $(".shape-item").eq(index-1);

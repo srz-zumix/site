@@ -51,7 +51,7 @@
 <tr><th>BG</th><td>
 <div class="picker-pane"><span>
 #<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="bgcol-selector"></input>
-<SELECT id="bgcol-selector-simple" class="simple-picker" name="simple-picker" style="width:20px;" >
+<SELECT id="bgcol-selector-simple" class="simple-picker" name="simple-picker" tabindex="-1" style="width:20px;" >
 </span></div></td></tr>
 <tr><td colspan="2" class="spliter"></td></tr>
 
@@ -59,7 +59,7 @@
 <tr><th>TEXT</th><td><SELECT id="text-item-select" name="text-item-select" ></SELECT><input type="button" name="Add" value="Add" id="add-text"></input></td></tr>
 <tr><td>color </td><td><div class="picker-pane"><span>
 #<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="col-selector"></input>
-<SELECT id="col-selector-simple" class="simple-picker" name="simple-picker" style="width:20px;" >
+<SELECT id="col-selector-simple" class="simple-picker" name="simple-picker" tabindex="-1" style="width:20px;" >
 </span></div></th></tr>
 <tr><td>size  </td><td><input type="text" value="14px" maxlength="6" size="6" id="size-text"  ></input></td></tr>
 <tr><td>weight</td><td>
@@ -85,7 +85,7 @@
 </td></tr>
 <tr><td>color </td><td><div class="picker-pane"><span>
 #<input type="text" maxlength="6" size="6" value="fefefe" class="picker" id="shapecol-selector"></input>
-<SELECT id="shapecol-selector-simple" class="simple-picker" name="simple-picker" style="width:20px;" >
+<SELECT id="shapecol-selector-simple" class="simple-picker" name="simple-picker" tabindex="-1" style="width:20px;" >
 </span></div></td></tr>
 <tr><td>type</td><td><p id="shape-type"></p></td></tr>
 <tr><td colspan="2" class="spliter"></td></tr>
@@ -170,19 +170,17 @@
     select_text_item($(".text-item").eq(index-1));
     blinkBorder($('.text-item').eq(index-1));
   });
-  function preload(arrayOfImages)
-  {
-    $(arrayOfImages).each(function()
-    {
+  function preload(arrayOfImages) {
+    $(arrayOfImages).each(function() {
         $('<img/>')[0].src = this;
-    }
+    });
   }
   $(function() {
     preload([
       '../images/Tutorial9/recycle32_228ef1.png'
     , '../images/Tutorial9/paperpencil32_228ef1.png'
     ]);
-  }
+  });
 </script>
 
 </body>

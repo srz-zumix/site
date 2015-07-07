@@ -31,6 +31,11 @@ $('.simple-picker').simpleColorPicker({
     $('#' + idname).colpickSetColor(c);
   }
 });
+//$('.simple-picker').on('keydown', function(e) {
+//  $(('.color-picker').hide();
+//  var prefix = $(this).attr('id').replace(/-/g, '') + '_';
+//  $(('#' + prefix + 'color-picker').hide();
+//});
 $('.picker-pane').click(function(){
   $(this).find('.picker').trigger("click");
 });
