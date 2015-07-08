@@ -163,12 +163,12 @@
   $('#shape-item-select').change(function(){
     var index = $("#shape-item-select").val();
     select_shape_item($(".shape-item").eq(index-1));
-    blinkBorder($('.shape-item').eq(index-1));
+    onSelectByCombo($('.shape-item').eq(index-1));
   });
   $('#text-item-select').change(function(){
     var index = $("#text-item-select").val();
     select_text_item($(".text-item").eq(index-1));
-    blinkBorder($('.text-item').eq(index-1));
+    onSelectByCombo($('.text-item').eq(index-1));
   });
   function preload(arrayOfImages) {
     $(arrayOfImages).each(function() {

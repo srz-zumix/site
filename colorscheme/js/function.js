@@ -20,6 +20,11 @@ function getItemPosition(item, drop_pos)
   }
 }
 
+function onSelectByCombo(item) {
+  $(item).children('.selectable').focus();
+  //blinkBorder(item);
+}
+
 function blinkBorder(item) {
   var cnt = 0;
   $(item).addClass('editing');
@@ -156,7 +161,7 @@ function update_ediable() {
     $(this).draggable({ disabled: false });
   }).on('dblclick', function() {
     $(this).draggable({ disabled: true });
-    $(this).children('p').focus();
+    $(this).find('p').focus();
   });
   $( ".shape-item").on('mousedown', function () {
     select_shape_item(this);
@@ -190,7 +195,7 @@ function on_added(item) {
 
 function get_current_text() {
   var index = $("#text-item-select").val();
-  return $(".text-item").eq(index-1).text();
+  return $(".text-item").eq(index-1).find('p').html();
 }
 function add_text_item() {
   var c = "#000";
