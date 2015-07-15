@@ -139,7 +139,6 @@ function update_ediable() {
       $('#garbageCan').children('img').attr({'src':"../images/Tutorial9/recycle32.png"});
     }
   }).hammer().on('doubletap',function(e){
-    $(this).draggable({ disabled: true });
     $(this).children(".ui-resizable-handle").each(function() {
       $(this).css("display", "block");
     });

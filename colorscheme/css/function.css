@@ -24,8 +24,8 @@
 }
 .circle-item .ui-resizable-handle {
   position: relative;
-  bottom: 20%;
-  left: 80%;
+  top: -125%;
+  left: 75%;
 }
 
 #text-item-select, #shape-item-select {
