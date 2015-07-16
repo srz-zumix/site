@@ -1,5 +1,5 @@
 function onResize() {
-  $('#main-wrapper').height($(window).height() - 54);
+  $('#main-wrapper').height($(window).height() - 50);
 }
 
 $(window).resize(function() {
@@ -142,6 +142,7 @@ function update_ediable() {
     $(this).children(".ui-resizable-handle").each(function() {
       $(this).css("display", "block");
     });
+    $(this).find('p').focus();
   }).on('mouseout', function() {
     update_auto_hide($(this));
   }).on('mousedown', function () {
