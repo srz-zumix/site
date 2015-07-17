@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="../lib/jquery/colpick/css/colpick.css" type="text/css" />
   <link rel="stylesheet" href="../lib/jquery/jquery-ui-1.11.4/jquery-ui.css" type="text/css" />
   <link rel="stylesheet" href="../lib/jquery/simple-color-picker/jquery.simple-color-picker.css" type="text/css" />
+  <link rel="stylesheet" href="../lib/jquery/jQuery-contextMenu-1.6.7/src/jquery.contextMenu.css" type="text/css" />
 
   <link rel="stylesheet" href="css/layout.css" type="text/css" />
   <link rel="stylesheet" href="css/toolbox.css" type="text/css" />
@@ -24,6 +25,7 @@
   <script type="text/javascript" src="../lib/jquery/colpick/js/colpick.js"></script>
   <script type="text/javascript" src="../lib/jquery/simple-color-picker/jquery.simple-color-picker.js"></script>
   <script type="text/javascript" src="../lib/jquery/rainbow/rainbow.min.js"></script>
+  <script type="text/javascript" src="../lib/jquery/jQuery-contextMenu-1.6.7/src/jquery.contextMenu.js"></script>
   
   <script type="text/javascript" src="../lib/jquery/jquery.zclip.1.1.1/jquery.zclip.min.js"></script>
   
@@ -131,6 +133,12 @@
 <div class="shape-item-droppable toolbox" shape-type="circle" >
   <img src="./images/circle.png" title="SHAPE circle item" />
 </div>
+<div id="bring-to-front" class="toolbox">
+  <img src="../images/paper_front_32.png" title="Bring to front" />
+</div>
+<div id="send-to-back" class="toolbox">
+  <img src="../images/paper_back_32.png" title="Send to back" />
+</div>
 
 </td>
 </tr>
@@ -138,6 +146,7 @@
 
 <script type="text/javascript" src="js/colorpicker.js"></script>
 <script type="text/javascript" src="js/toolbox.js"></script>
+<script type="text/javascript" src="js/contextmenu.js"></script>
 
 <script type="text/javascript">
   $('#size-text').change(function(){

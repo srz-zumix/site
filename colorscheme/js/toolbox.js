@@ -33,7 +33,7 @@ $('#handleVisible').click(function(){
   {
     $(this).children('img').attr({'src':"../images/ui-handle-icon_228ef1.png"});
     autoHide = false;
-    $(".editable .ui-resizable-handle").each(function() {
+    $('.editable .ui-resizable-handle').each(function() {
       $(this).css("display", "block");
     });
   }
@@ -41,11 +41,57 @@ $('#handleVisible').click(function(){
   {
     $(this).children('img').attr({'src':"../images/ui-handle-icon_222222.png"});
     autoHide = true;
-    $(".editable .ui-resizable-handle").each(function() {
+    $('.editable .ui-resizable-handle').each(function() {
       $(this).css("display", "none");
     });
   }
 });
+
+function znormalize(c, begin) {
+  var a = $(c).sort(function(a, b) {
+    return (Number($(a).css('z-index')) - Number($(b).css('z-index')) );
+  });
+  var z = begin;
+  a.each(function() {
+    $(this).css('z-index', z);
+    z += 1;
+  });
+  return z;
+}
+
+function bringToFront(target) {
+  var zmax = 0;
+  if( target.hasClass('text-item') ) {
+    zmax = znormalize($('.text-item'), 1000);
+  } else if( target.hasClass('shape-item') ) {
+    zmax = znormalize($('.shape-item'), 100);
+  }
+  target.css('z-index', zmax);
+}
+function sendToBack(target) {
+  var zmin = 10000;
+  if( target.hasClass('text-item') ) {
+    znormalize($('.text-item'), 1001);
+    zmin = 1000;
+  } else if( target.hasClass('shape-item') ) {
+    znormalize($('.shape-item'), 101);
+    zmin = 100;
+  }
+  target.css('z-index', zmin);
+}
+
+$('#bring-to-front').on('mousedown', function(){
+  $('.selectable:focus').each(function() {
+    bringToFront($(this).parent());
+  });
+});
+
+$('#send-to-back').on('mousedown', function(){
+  $('.selectable:focus').each(function() {
+    sendToBack($(this).parent());
+  });
+});
+
 
 $('#text-item-droppable').draggable({
     cursor: "pointer"
