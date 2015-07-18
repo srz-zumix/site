@@ -80,13 +80,21 @@ function sendToBack(target) {
   target.css('z-index', zmin);
 }
 
-$('#bring-to-front').on('mousedown', function(){
+$('#bring-to-front').hammer().on('tap', function() {
+  $('.selectable:focus').each(function() {
+    bringToFront($(this).parent());
+  });
+}).on('mousedown', function(){
   $('.selectable:focus').each(function() {
     bringToFront($(this).parent());
   });
 });
 
-$('#send-to-back').on('mousedown', function(){
+$('#send-to-back').hammer().on('tap', function(){
+  $('.selectable:focus').each(function() {
+    sendToBack($(this).parent());
+  });
+}).on('mousedown', function(){
   $('.selectable:focus').each(function() {
     sendToBack($(this).parent());
   });
